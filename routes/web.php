@@ -61,3 +61,5 @@ Route::get('/single-product', function () {
 Route::get('/terms-conditions', function () {
     return view('frontend.termsconditions');
 });
+
+require __DIR__ . '/admin.php';
