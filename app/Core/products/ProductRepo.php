@@ -16,6 +16,9 @@ class ProductRepo implements ProductInterface
     }
     public function fetchAllProducts($orderBy)
     {
+        if ($orderBy == "Rand") {
+            return $this->productModel->inRandomOrder()->limit(12)->get();
+        }
         return $this->productModel->orderBy("id", $orderBy)->get();
     }
 
