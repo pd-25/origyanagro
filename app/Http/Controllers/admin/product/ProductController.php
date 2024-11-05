@@ -74,9 +74,9 @@ class ProductController extends Controller
             $storeProduct = $this->productInterface->storeProduct($productData, $variations, $productImages);
             // dd($storeProduct);
             if ($storeProduct) {
-                return redirect()->route('product-mamages.index')->with('success', 'Product created successfully!');
+                return redirect()->route('product-mamages.index')->with('msg', 'Product created successfully!');
             } else {
-                return back()->with('success', 'Some error occur!');
+                return back()->with('msg', 'Some error occur!');
             }
         } catch (\Throwable $th) {
             Log::debug('ErrorFile-', [$th->getFile()]);
@@ -96,24 +96,83 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($slug)
     {
-        //
+        $product = $this->productInterface->fetchProductBySlug($slug);
+        if (!$product) {
+            return redirect()->route('product-mamages.index')->with('error', 'Product not found');
+        }
+    
+        return view('admin.products.edit', [
+            'product' => $product,
+            'categories' => $this->categoryInterface->fetchAllCategories("DESC"),
+        ]);
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string',
+                'category_id' => 'required|exists:categories,id',
+                'type' => 'required|string',
+                'description' => 'required|string',
+                'variant_name.*' => 'required|string',
+                'measurement.*' => 'required|numeric',
+                'measurement_param.*' => 'required|string',
+                'price.*' => 'required|numeric',
+                'quantity.*' => 'required|integer',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+    
+            // Prepare variations
+            $variations = [];
+            foreach ($request->variant_name as $index => $variantName) {
+                $variations[] = [
+                    'variant_name' => $variantName,
+                    'measurement' => $request->measurement[$index],
+                    'measurement_param' => $request->measurement_param[$index],
+                    'price' => $request->price[$index],
+                    'quantity' => $request->quantity[$index],
+                ];
+            }
+    
+            // Prepare main product data
+            $productData = $request->only("name", "category_id", "type", "description");
+            $productData["quantity_in_stock"] = array_sum(array_column($variations, 'quantity'));
+    
+            // Prepare images if any new images are uploaded
+            $productImages = $request->only("images");
+    
+            // Call the update method in the interface
+            $updateProduct = $this->productInterface->updateProduct($id, $productData, $variations, $productImages);
+    
+            if ($updateProduct) {
+                return redirect()->route('product-mamages.index')->with('msg', 'Product updated successfully!');
+            } else {
+                return back()->with('msg', 'An error occurred while updating the product');
+            }
+        } catch (\Throwable $th) {
+            Log::debug('ErrorFile-', [$th->getFile()]);
+            Log::debug('ErrorMsg-', [$th->getMessage()]);
+            return back()->with('error', 'An error occurred. Please try again.');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $deleted = $this->productInterface->deleteProductById($id);
+
+        if ($deleted) {
+            return redirect()->route('product-mamages.index')->with('msg', 'Product deleted successfully.');
+        } else {
+            return redirect()->route('product-mamages.index')->with('msg', 'Failed to delete the product.');
+        }
     }
 }

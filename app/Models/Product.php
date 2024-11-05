@@ -39,4 +39,8 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class, "product_id", "id")->where("is_primary", 1);
     }
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id', 'id'); // Assuming a ProductVariant model exists
+    }
 }
