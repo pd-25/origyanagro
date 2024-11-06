@@ -50,6 +50,8 @@
 
                                                 </button>
                                             </form>
+                                            <a href="{{ route('reviews.showByProduct', $product->id) }}"><i
+                                                class="ri-question-answer-fill"></i></a>
                                         </td>
                                     </tr>
                                 @empty
