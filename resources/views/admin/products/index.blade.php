@@ -39,7 +39,7 @@
                                         <td>
                                             <a href="{{ route('product-mamages.edit', $product->slug) }}"><i
                                                     class="ri-pencil-fill"></i></a>
-                                            <form method="POST" action="{{ route('product-mamages.destroy', $product->slug) }}"
+                                            <form method="POST" action="{{ route('product-mamages.destroy', $product->id) }}"
                                                 class="d-inline-block pl-2">
                                                 @csrf
                                                 @method('DELETE')
@@ -50,6 +50,8 @@
 
                                                 </button>
                                             </form>
+                                            <a href="{{ route('reviews.showByProduct', $product->id) }}"><i
+                                                class="ri-question-answer-fill"></i></a>
                                         </td>
                                     </tr>
                                 @empty
