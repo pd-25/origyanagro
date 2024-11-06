@@ -102,8 +102,8 @@
                                         <span><a href="">10Reviews</a></span>
                                     <li>
                                 </ul>
-                                <p class="pro-box-price">₹90.00</p>
-                                <a href="" class="sp-btn">Shop Now</a>
+                                <p class="pro-box-price">₹{{$productW?->productVariantPrice?->price}}</p>
+                                <a href="{{route("singleProduct", $productW->slug)}}" class="sp-btn">Shop Now</a>
                             </div>
                         </div>
                     </div>

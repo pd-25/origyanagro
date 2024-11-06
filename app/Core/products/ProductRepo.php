@@ -60,4 +60,9 @@ class ProductRepo implements ProductInterface
         Log::debug('ErrorFile-', [$th->getFile()]);
         Log::debug('ErrorMsg-', [$th->getMessage()]);
     }
+
+    public function fetchsingleProduct($slug)
+    {
+        return $this->productModel->with("productImages", "productVariantPrice")->where("slug", $slug)->first();
+    }
 }

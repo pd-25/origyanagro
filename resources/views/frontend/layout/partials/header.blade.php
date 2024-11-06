@@ -112,13 +112,12 @@
                                 <a href="#" class="search-toggle" data-selector="#header-1"></a>
                             </div>
                             <ul class="head-account">
-
                                 @if (Route::has('login'))
                                     @auth
                                         <li><a href="{{ route('account') }}">Account</a></li>
                                         <li><a href="{{ route('cart') }}"><i class="fa fa-shopping-bag"
-                                                    aria-hidden="true"></i><sup>(0)</sup></a></li>
-                                        
+                                                    aria-hidden="true"></i><sup>({{ auth()->user()->carts->count() }})</sup></a>
+                                        </li>
                                     @else
                                         <li><a href="{{ route('login') }}">Log in</a></li>
 

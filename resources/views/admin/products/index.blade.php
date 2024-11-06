@@ -34,7 +34,7 @@
 
                                         <td>{{ Str::limit($product->description, 100, '...') }}</td>
                                         <td>{{ $product->quantity_in_stock }}</td>
-                                        <td><img src="{{ asset('storage/' . $product->productPrimaryImage->image_path) }}" alt=""
+                                        <td><img src="{{ asset('storage/' . $product?->productPrimaryImage?->image_path) }}" alt=""
                                                 srcset="" height="100px" width="100px"></td>
                                         <td>
                                             <a href="{{ route('product-mamages.edit', $product->slug) }}"><i

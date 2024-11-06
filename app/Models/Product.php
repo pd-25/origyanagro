@@ -34,9 +34,22 @@ class Product extends Model
         return $this->hasMany(ProductImage::class, "product_id", "id");
     }
 
+    public function productVariants(){
+        return $this->hasMany(ProductVariant::class, "product_id", "id");
+    }
+
 
     public function productPrimaryImage()
     {
         return $this->hasOne(ProductImage::class, "product_id", "id")->where("is_primary", 1);
+    }
+
+    public function productVariantPrice()
+    {
+        return $this->hasOne(ProductVariant::class, "product_id", "id")->where("is_show", 1);
+    }
+
+    public function carts(){
+        return $this->hasMany(Cart::class, "product_id", "id");
     }
 }
