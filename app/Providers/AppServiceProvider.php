@@ -10,6 +10,8 @@ use App\Core\products\ProductInterface;
 use App\Core\products\ProductRepo;
 use App\Core\review\ProductReviewInterface;
 use App\Core\review\ProductReviewRepo;
+use App\Core\user\userInterface;
+use App\Core\user\userRepo;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
        $this->app->bind(ProductReviewInterface::class, ProductReviewRepo::class);
        $this->app->bind(OrderInterface::class, OrderRepo::class);
        
+       $this->app->bind(userInterface::class, userRepo::class);
     }
 
     /**

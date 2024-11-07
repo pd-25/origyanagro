@@ -25,7 +25,12 @@
             </a>
         </li>
         
-
+        <li class="nav-item {{ Route::is('users.*') ? 'active' : '' }}">
+            <a class="nav-link " href="{{route('users.index')}}">
+                <i class="ri-group-fill"></i>
+                <span>Users</span>
+            </a>
+        </li>
         
     </ul>
 
