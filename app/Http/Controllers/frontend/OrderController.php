@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\frontend;
 
+use App\Core\order\OrderInterface;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\ProductVariant;
@@ -10,12 +11,16 @@ use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
-    public function __construct(){
-        
+    public $orderInterface;
+    public function __construct(OrderInterface $orderInterface)
+    {
+        $this->orderInterface = $orderInterface;
     }
     public function cart()
     {
-        return view('frontend.cart');
+        return view('frontend.cart', [
+            "carts" => $this->orderInterface->getAllCarts(auth()->id())
+        ]);
     }
 
     public function addToCart(Request $request)

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Core\category\CategoryInterface;
 use App\Core\category\CategoryRepo;
+use App\Core\order\OrderInterface;
+use App\Core\order\OrderRepo;
 use App\Core\products\ProductInterface;
 use App\Core\products\ProductRepo;
 use App\Core\review\ProductReviewInterface;
@@ -20,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
        $this->app->bind(ProductInterface::class, ProductRepo::class);
        $this->app->bind(CategoryInterface::class, CategoryRepo::class);
        $this->app->bind(ProductReviewInterface::class, ProductReviewRepo::class);
+       $this->app->bind(OrderInterface::class, OrderRepo::class);
+       
     }
 
     /**
