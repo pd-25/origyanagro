@@ -18,11 +18,10 @@ Route::group(['middleware' => 'usercheck'], function () {
     Route::get('/account', [IndexController::class, 'account'])->name(name: 'account');
     Route::post('/add-to-cart', [OrderController::class, 'addToCart'])->name('addToCart');
     Route::get('/cart', [OrderController::class, 'cart'])->name('cart');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/update-cart', [OrderController::class, 'updateCart'])->name('cart.update');
 });
 
-Route::get('/checkout', function () {
-    return view('frontend.checkout');
-});
 
 // Route::get('/login', function () {
 //     return view('frontend.login');

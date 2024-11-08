@@ -1,4 +1,5 @@
 <script src="{{ asset('frontend-asset/js/script.js')}}" defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="{{ asset('frontend-asset/owl-carousel/js/owl.carousel.js')}}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- End Owl pranab-->
