@@ -20,55 +20,26 @@
                             <button type="button" class="menu-mobile-close"><i class="ion ion-ios-close"></i></button>
                         </div>
                         <ul class="menu-section">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about-us.html">About Us</a></li>
+                            <li><a href="{{ route('index') }}">Home</a></li>
+                            <li><a href="{{ route('aboutUs') }}">About Us</a></li>
 
                             <li class="menu-item-has-children">
                                 <a href="#">Product <i class="ion ion-ios-arrow-down"></i></a>
                                 <div class="menu-subs menu-mega menu-column-5">
-                                    <div class="list-item">
-                                        <h4 class="title">Rice & Rice Products</h4>
-                                        <hr>
-                                        <ul>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <!--<li class="menu-btncls"><a href="#">View More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></li>-->
-                                        </ul>
-                                    </div>
-                                    <div class="list-item">
-                                        <h4 class="title">Organic Oil</h4>
-                                        <hr>
-                                        <ul>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <!--<li class="menu-btncls"><a href="#">View More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></li>-->
-                                        </ul>
-                                    </div>
-                                    <div class="list-item">
-                                        <h4 class="title">Organic Dry Fruits</h4>
-                                        <hr>
-                                        <ul>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <li><a href="product.html">Product Name Here</a></li>
-                                            <!--<li class="menu-btncls"><a href="#">View More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></li>-->
-                                        </ul>
-                                    </div>
-                                    <div class="list-item">
+                                    @foreach ($categories as $category)
+                                        <div class="list-item">
+                                            <h4 class="title">{{ $category->name }}</h4>
+                                            <hr>
+                                            <ul>
+                                                @foreach ($category->products as $product)
+                                                    <li><a
+                                                            href="{{ route('singleProduct', $product->slug) }}">{{ $product->name }}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endforeach
+                                    {{-- <div class="list-item">
                                         <h4 class="title">Sugar, Salt & Jaggery</h4>
                                         <hr>
                                         <ul>
@@ -81,7 +52,7 @@
                                             <li><a href="product.html">Product Name Here</a></li>
                                             <!--<li class="menu-btncls"><a href="#">View More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></li>-->
                                         </ul>
-                                    </div>
+                                    </div> --}}
 
 
 
@@ -92,6 +63,22 @@
                                     </div>
                                 </div>
                             </li>
+                            {{-- <li class="menu-item-has-children">
+                                <a href="#">Product <i class="ion ion-ios-arrow-down"></i></a>
+                                <div class="menu-subs menu-mega menu-column-5">
+                                    @foreach ($categories as $category)
+                                        <div class="list-item">
+                                            <h4 class="title">{{ $category->name }}</h4>
+                                            <hr>
+                                            <ul>
+                                                @foreach ($category->products as $product)
+                                                    <li><a href="{{ route('singleProduct', $product->id) }}">{{ $product->name }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </li> --}}
                             <li><a href="certificate.html">Certificate</a></li>
                             <li><a href="contact-us.html">Contact Us</a></li>
                         </ul>
@@ -129,8 +116,7 @@
 
                             </ul>
                             <form action="" class="search-box">
-                                <input type="text" class="text search-input"
-                                    placeholder="Type here to search..." />
+                                <input type="text" class="text search-input" placeholder="Type here to search..." />
                             </form>
                         </nav>
                     </div>

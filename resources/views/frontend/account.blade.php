@@ -30,11 +30,12 @@
                             <div class="col-lg-7">
                                 <div class="pro-box-ctn">
                                     <ul>
-                                        <li><i class="fa fa-user-o" aria-hidden="true"></i> Full Name</li>
-                                        <li><i class="fa fa-envelope-o" aria-hidden="true"></i> info@gmail.com</li>
-                                        <li><i class="fa fa-phone" aria-hidden="true"></i> +91 9876543210</li>
-                                        <li><i class="fa fa-map-marker" aria-hidden="true"></i> Street address, City, State,
-                                            Zip Code</li>
+                                        <li><i class="fa fa-user-o" aria-hidden="true"></i> {{ auth()->user()?->name }}</li>
+                                        <li><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ auth()->user()?->email }}
+                                        </li>
+                                        <li><i class="fa fa-phone" aria-hidden="true"></i> {{ auth()->user()?->phone }}</li>
+                                        <li><i class="fa fa-map-marker" aria-hidden="true"></i>
+                                            {{ auth()->user()?->street_address }}</li>
                                         <li><i class="fa fa-key" aria-hidden="true"></i> <b>Current Password:</b> ******
                                         </li>
 
@@ -64,6 +65,9 @@
             <div class="row mt-5">
                 <div class="col-lg-12 text-center">
                     <h3 class="mb-4">My Order Details</h3>
+                    @if (Session::has('msg'))
+                        <p class="alert alert-info">{{ Session::get('msg') }}</p>
+                    @endif
                 </div>
                 <div class="col-lg-12">
                     <table class="table cart-tl">
@@ -78,45 +82,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row"><img src="{{ asset('frontend-asset/images/pro-img.jpg') }}"
-                                        class="img-fluid"></th>
-                                <td>Product Name Here</td>
-                                <td>₹250.00</td>
-                                <td>16.04.2322</td>
-                                <td>2</td>
-                                <td>Street Address, City, State, Zipcode</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><img src="{{ asset('frontend-asset/images/pro-img.jpg') }}"
-                                        class="img-fluid"></th>
-                                <td>Product Name Here</td>
-                                <td>₹250.00</td>
-                                <td>16.04.2322</td>
-                                <td>2</td>
-                                <td>Street Address, City, State, Zipcode</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><img src="{{ asset('frontend-asset/images/pro-img.jpg') }}"
-                                        class="img-fluid"></th>
-                                <td>Product Name Here</td>
-                                <td>₹250.00</td>
-                                <td>16.04.2322</td>
-                                <td>2</td>
-                                <td>Street Address, City, State, Zipcode</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><img src="{{ asset('frontend-asset/images/pro-img.jpg') }}"
-                                        class="img-fluid"></th>
-                                <td>Product Name Here</td>
-                                <td>₹250.00</td>
-                                <td>16.04.2322</td>
-                                <td>2</td>
-                                <td>Street Address, City, State, Zipcode</td>
-                            </tr>
+                            @forelse (auth()->user()->orders as $order)
+                                <tr>
+                                    <td colspan="6">
+                                        <strong>Order Number: {{ $order->order_number }}</strong><br>
+                                        <strong>Stauts: {{ $order->status }}</strong>
+                                    </td>
+                                </tr>
+                                @foreach ($order->orderItems as $orderItem)
+                                    <tr>
+                                        <th scope="row">
+                                            <img src="{{ asset('storage/' . $orderItem?->product?->productPrimaryImage?->image_path) }}"
+                                                class="img-fluid">
+                                        </th>
+                                        <td>{{ $orderItem->product?->name }}</td>
+                                        <td>₹{{ $orderItem->price }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($orderItem->created_at)->format('d M, Y h:i A') }}
+                                        </td>
+                                        <td>{{ $orderItem->quantity }}</td>
+                                        <td>{{ $order->street_address }}</td>
+                                    </tr>
+                                @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="6">No orders found.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
         </div>

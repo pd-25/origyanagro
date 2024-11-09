@@ -18,35 +18,37 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h2 class="mb-4">Checkout</h2>
-                    <form id="checkout-form" method="post" action="" role="form" class="border-box p-4">
+                    @if (Session::has('msg'))
+                        <p class="alert alert-info">{{ Session::get('msg') }}</p>
+                    @endif
+                    <form id="checkout-form" method="post" action="{{ route('placeOrder') }}" role="form"
+                        class="border-box p-4">
+                        @csrf
                         <div class="controls">
                             <div class="row mb-5">
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>First Name</label>
-                                        <input id="fname" type="text" name="fname" class="form-control"
-                                            required="required" data-error="First Name is required.">
+                                        <label>Name</label>
+                                        <input id="fname" type="text" name="name" class="form-control"
+                                            required="required" data-error="First Name is required."
+                                            value="{{ auth()->user()->name }}">
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>Last Name</label>
-                                        <input id="lname" type="text" name="lname" class="form-control"
-                                            required="required" data-error="Last Name is required.">
-                                    </div>
-                                </div>
+
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input id="Email" type="text" name="Email" class="form-control"
-                                            required="required" data-error="Email is required.">
+                                        <input id="Email" type="text" name="email" class="form-control"
+                                            required="required" data-error="Email is required."
+                                            value="{{ auth()->user()->email }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <label>Phone</label>
-                                        <input id="Phone" type="text" name="Phone" class="form-control"
-                                            required="required" data-error="Phone is required.">
+                                        <input id="Phone" type="text" name="phone" class="form-control"
+                                            required="required" data-error="Phone is required."
+                                            value="{{ auth()->user()->phone }}">
                                     </div>
                                 </div>
                             </div>
@@ -55,26 +57,26 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Country</label>
-                                        <select class="form-control">
-                                            <option>Country 1</option>
-                                            <option>Country 2</option>
-                                            <option>Country 3</option>
-                                            <option>Country 4</option>
+                                        <select class="form-control" name="country" id="country">
+                                            <option selected value="India">India</option>
+
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Street Address</label>
-                                        <input id="Street_address" type="text" name="Street_address" class="form-control"
-                                            required="required" data-error="Street Address is required.">
+                                        <input id="Street_address" type="text" name="street_address" class="form-control"
+                                            required="required" data-error="Street Address is required."
+                                            value="{{ auth()->user()->street_address }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Apartment, suite, unit etc. (optional)</label>
-                                        <input id="Apartment" type="text" name="Apartment" class="form-control"
-                                            required="required" data-error="Apartment is required.">
+                                        <input id="Apartment" type="text" name="appertment_house_no" class="form-control"
+                                            required="required" data-error="Apartment is required."
+                                            value="{{ auth()->user()->appertment_house_no }}">
                                     </div>
                                 </div>
                             </div>
@@ -83,22 +85,25 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Town / City</label>
-                                        <input id="City" type="text" name="City" class="form-control"
-                                            required="required" data-error="City is required.">
+                                        <input id="City" type="text" name="town_city" class="form-control"
+                                            required="required" data-error="City is required."
+                                            value="{{ auth()->user()->town_city }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>State</label>
-                                        <input id="State" type="text" name="State" class="form-control"
-                                            required="required" data-error="State is required.">
+                                        <input id="State" type="text" name="state" class="form-control"
+                                            required="required" data-error="State is required."
+                                            value="{{ auth()->user()->state }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Postcode</label>
-                                        <input id="Postcode" type="text" name="Postcode" class="form-control"
-                                            required="required" data-error="Postcode is required.">
+                                        <input id="Postcode" type="text" name="postcode" class="form-control"
+                                            required="required" data-error="Postcode is required."
+                                            value="{{ auth()->user()->postcode }}">
                                     </div>
                                 </div>
                             </div>
@@ -150,24 +155,27 @@
                             <div class="row mb-4">
                                 <div class="col-lg-12">
                                     <div class="form-check mb-3 pl-0">
-                                        <input class="form-check-input" type="radio" name="exampleRadios"
-                                            id="exampleRadios1" value="option1" checked>
-                                        <label class="form-check-label pay-radio" for="exampleRadios1">
-                                            Pay Via Stripe
+                                        <input class="form-check-input" type="radio" name="payment_mode"
+                                            id="cashOnDelivery" value="cash" checked>
+                                        <label class="form-check-label pay-radio" for="cashOnDelivery">
+                                            Cash on Delivery
                                         </label>
                                     </div>
                                     <div class="form-check pl-0">
-                                        <input class="form-check-input" type="radio" name="exampleRadios"
-                                            id="exampleRadios2" value="option2">
-                                        <label class="form-check-label pay-radio" for="exampleRadios2">
-                                            Pay Via PayPal
+                                        <input class="form-check-input" type="radio" name="payment_mode"
+                                            id="razorpay" value="razorpay">
+                                        <label class="form-check-label pay-radio" for="razorpay">
+                                            Pay Via Razorpay
                                         </label>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-1">
                                 <div class="col-lg-12">
-                                    <a href="" class="banner-btn">Checkout</a>
+                                    <button class="banner-btn" type="submit" id="placeOrderBtn">Place Order</button>
+                                    <button class="banner-btn" type="button" id="payOnlineBtn"
+                                        style="display: none;">Pay Online</button>
                                 </div>
                             </div>
 
@@ -185,103 +193,91 @@
 
     <section id="line2-section"> </section>
 
-    <script src="js/script.js" defer></script>
-    <script src="owl-carousel/js/owl.carousel.js"></script>
-    <!-- End Owl pranab-->
+    {{-- <script src="{{ asset('frontend-asset/js/script.js') }}" defer></script> --}}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+@endsection
+@section('script')
     <script>
-        (function() {
-            'use strict';
+        document.addEventListener('DOMContentLoaded', function() {
+            const cashOnDeliveryOption = document.getElementById('cashOnDelivery');
+            const razorpayOption = document.getElementById('razorpay');
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            const payOnlineBtn = document.getElementById('payOnlineBtn');
 
-            function ctrls() {
-                var _this = this;
+            // Run toggle function on page load to set initial button state
+            toggleButtons();
 
-                this.counter = 0;
-                this.els = {
-                    decrement: document.querySelector('.ctrl__button--decrement'),
-                    counter: {
-                        container: document.querySelector('.ctrl__counter'),
-                        num: document.querySelector('.ctrl__counter-num'),
-                        input: document.querySelector('.ctrl__counter-input')
-                    },
-                    increment: document.querySelector('.ctrl__button--increment')
-                };
+            // Event listeners for changing payment options
+            cashOnDeliveryOption.addEventListener('change', toggleButtons);
+            razorpayOption.addEventListener('change', toggleButtons);
 
-                this.decrement = function() {
-                    var counter = _this.getCounter();
-                    var nextCounter = (_this.counter > 0) ? --counter : counter;
-                    _this.setCounter(nextCounter);
-                };
+            function toggleButtons() {
+                if (cashOnDeliveryOption.checked) {
+                    placeOrderBtn.style.display = 'block';
+                    payOnlineBtn.style.display = 'none';
+                } else if (razorpayOption.checked) {
+                    placeOrderBtn.style.display = 'none';
+                    payOnlineBtn.style.display = 'block';
+                }
+            }
+        });
 
-                this.increment = function() {
-                    var counter = _this.getCounter();
-                    var nextCounter = (counter < 9999999999) ? ++counter : counter;
-                    _this.setCounter(nextCounter);
-                };
-
-                this.getCounter = function() {
-                    return _this.counter;
-                };
-
-                this.setCounter = function(nextCounter) {
-                    _this.counter = nextCounter;
-                };
-
-                this.debounce = function(callback) {
-                    setTimeout(callback, 100);
-                };
-
-                this.render = function(hideClassName, visibleClassName) {
-                    _this.els.counter.num.classList.add(hideClassName);
-
-                    setTimeout(function() {
-                        _this.els.counter.num.innerText = _this.getCounter();
-                        _this.els.counter.input.value = _this.getCounter();
-                        _this.els.counter.num.classList.add(visibleClassName);
-                    }, 100);
-
-                    setTimeout(function() {
-                        _this.els.counter.num.classList.remove(hideClassName);
-                        _this.els.counter.num.classList.remove(visibleClassName);
-                    }, 200);
-                };
-
-                this.ready = function() {
-                    _this.els.decrement.addEventListener('click', function() {
-                        _this.debounce(function() {
-                            _this.decrement();
-                            _this.render('is-decrement-hide', 'is-decrement-visible');
-                        });
-                    });
-
-                    _this.els.increment.addEventListener('click', function() {
-                        _this.debounce(function() {
-                            _this.increment();
-                            _this.render('is-increment-hide', 'is-increment-visible');
-                        });
-                    });
-
-                    _this.els.counter.input.addEventListener('input', function(e) {
-                        var parseValue = parseInt(e.target.value);
-                        if (!isNaN(parseValue) && parseValue >= 0) {
-                            _this.setCounter(parseValue);
-                            _this.render();
+        var options = {
+            "key": "{{ env('RAZORPAY_KEY') }}",
+            "amount": "{{ $totalAmount * 100 }}",
+            "currency": "INR",
+            "name": "{{ env('APP_NAME') }}",
+            "description": "Test Transaction",
+            "image": "{{ asset('frontend-asset/images/logo.png') }}",
+            "handler": function(response) {
+                fetch("{{ route('razorpay.payment.store') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            name: document.getElementById("fname").value,
+                            email: document.getElementById("Email").value,
+                            phone: document.getElementById("Phone").value,
+                            country: document.getElementById("country").value,
+                            street_address: document.getElementById("Street_address").value,
+                            appertment_house_no: document.getElementById("Apartment").value,
+                            town_city: document.getElementById("City").value,
+                            state: document.getElementById("State").value,
+                            postcode: document.getElementById("Postcode").value,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Payment was successful!");
+                            // Redirect or perform additional actions
+                        } else {
+                            alert("Payment verification failed.");
                         }
-                    });
+                    })
+                    .catch(error => console.error("Payment verification error:", error));
+            },
+            "prefill": {
+                "name": document.getElementById("fname").value,
+                "email": document.getElementById("Email").value,
+                "contact": document.getElementById("Phone").value
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
 
-                    _this.els.counter.input.addEventListener('focus', function(e) {
-                        _this.els.counter.container.classList.add('is-input');
-                    });
+        var rzp1 = new Razorpay(options);
 
-                    _this.els.counter.input.addEventListener('blur', function(e) {
-                        _this.els.counter.container.classList.remove('is-input');
-                        _this.render();
-                    });
-                };
-            };
-
-            // init
-            var controls = new ctrls();
-            document.addEventListener('DOMContentLoaded', controls.ready);
-        })();
+        document.getElementById('payOnlineBtn').onclick = function(e) {
+            rzp1.open();
+            e.preventDefault();
+        }
     </script>
 @endsection

@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
-Route::get('/', [IndexController::class, 'index']);
+Route::get('/', [IndexController::class, 'index'])->name('index');
 
 
-Route::get('/about-us', [IndexController::class, 'aboutUs']);
+Route::get('/about-us', [IndexController::class, 'aboutUs'])->name("aboutUs");
 Route::get('/certificate', [IndexController::class, 'certificate']);
 Route::get('/contact-us', [IndexController::class, 'contactus']);
 Route::get('/single-product/{slug}', [ProductController::class, 'singleProduct'])->name("singleProduct");
@@ -20,6 +20,9 @@ Route::group(['middleware' => 'usercheck'], function () {
     Route::get('/cart', [OrderController::class, 'cart'])->name('cart');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/update-cart', [OrderController::class, 'updateCart'])->name('cart.update');
+    Route::post('/place-order', [OrderController::class, 'placeOrder'])->name('placeOrder');
+    Route::post('razorpay-payment', [OrderController::class, 'payPlaceOrder'])->name('razorpay.payment.store');
+
 });
 
 
