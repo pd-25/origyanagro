@@ -96,4 +96,33 @@ class OrderRepo implements OrderInterface
         }
         return intval($order_number);
     }
+
+    //admin
+    public function fetchAllOrders()
+    {
+        return Order::with('orderItems')->get(); // Include order items if needed
+    }
+
+    // Show order details by ID
+    public function showOrderDetails($id)
+    {
+        return Order::with('orderItems')->findOrFail($id);
+    }
+
+    // Update an order
+    public function updateOrder($id, $data)
+    {
+        $order = Order::findOrFail($id);
+        $order->update($data);
+        return $order;
+    }
+
+    // Delete an order
+    public function deleteOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->orderItems()->delete(); // Delete related order items
+        return $order->delete(); // Then delete the order
+    }
+    
 }

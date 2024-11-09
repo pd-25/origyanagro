@@ -18,4 +18,16 @@ class Order extends Model
         // return Carbon::parse($value)->setTimezone(config('app.timezone'))->toDateTimeString();
         return Carbon::parse($value)->timezone('Asia/Kolkata')->toDateTimeString();
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function products()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function products_varient()
+    {
+        return $this->belongsTo(ProductVariant::class);
+    }
 }

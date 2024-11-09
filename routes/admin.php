@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\casestudy\CaseStudyController;
 use App\Http\Controllers\admin\category\CategoryController;
 use App\Http\Controllers\admin\dashboard\DashboardController;
 use App\Http\Controllers\admin\news\NewsController;
+use App\Http\Controllers\admin\order\orderController;
 use App\Http\Controllers\admin\product\ProductReviewController;
 use App\Http\Controllers\admin\ResearchController;
 use App\Http\Controllers\admin\JournalController;
@@ -27,4 +28,6 @@ Route::group(['prefix' => 'admin', 'middleware'=>'admin'], function () {
     Route::get('/reviews/product/{productId}', [ProductReviewController::class, 'showByProduct'])->name('reviews.showByProduct');
     Route::put('/reviews/{review}/status', [ProductReviewController::class, 'updateStatus'])->name('reviews.updateStatus');
     Route::resource('/users', userController::class);
+    Route::resource('/orders', orderController::class);
+
 });
