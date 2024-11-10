@@ -24,7 +24,12 @@
                 <span>Products</span>
             </a>
         </li>
-        
+        <li class="nav-item {{ Route::is('orders.*') ? 'active' : '' }}">
+            <a class="nav-link " href="{{route('orders.index')}}">
+                <i class="ri-group-fill"></i>
+                <span>Orders</span>
+            </a>
+        </li>
         <li class="nav-item {{ Route::is('users.*') ? 'active' : '' }}">
             <a class="nav-link " href="{{route('users.index')}}">
                 <i class="ri-group-fill"></i>
