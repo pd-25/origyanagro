@@ -394,7 +394,7 @@
                 <div class="col-lg-6">
                     <h2>Trusted By<br> 5,000+ Families.</h2>
                     <p>100% Chemical-free Pure<br> Organic Product Today</p>
-                    <a href="" class="sp-dark-btn">Registger Now</a>
+                    <a href="{{route('register')}}" class="sp-dark-btn">Registger Now</a>
                 </div>
             </div>
         </div>
@@ -696,7 +696,7 @@
                     <h2>About Our Company</h2>
                     <p>We specialize in producing tasty, healthy, wholesome, and nutritious organic food products that
                         are dedicated to better eating for better living.</p>
-                    <a href="" class="banner-btn">know more about us</a>
+                    <a href="{{route('aboutUs')}}" class="banner-btn">know more about us</a>
                 </div>
             </div>
         </div>
@@ -735,7 +735,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-4">
-                    <a href="" class="sp-btn-snd">Know More</a>
+                    <a href="{{route('aboutUs')}}" class="sp-btn-snd">Know More</a>
                 </div>
             </div>
         </div>
