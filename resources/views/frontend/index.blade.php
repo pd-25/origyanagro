@@ -84,13 +84,14 @@
             </div>
             <div class="portfolio-item row">
                 @forelse ($products as $productW)
-                    <div class="item category{{$productW->category_id}} col-lg-3 col-md-3 col-12 col-sm">
+                    <div class="item category{{ $productW->category_id }} col-lg-3 col-md-3 col-12 col-sm">
                         <div class="product-box">
                             <div class="product-box-img">
-                                <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
+                                <img src="{{ asset('storage/' . $productW?->productPrimaryImage?->image_path) }}"
+                                    class="img-fluid">
                             </div>
                             <div class="product-box-ctn">
-                                <h4>{{$productW->name}}</h4>
+                                <h4>{{ $productW->name }}</h4>
                                 <p class="pro-sort-desc">{{ Str::limit($productW->description, 50, '...') }}</p>
                                 <ul class="pb-list">
                                     <li class="pro-box-review">
@@ -102,8 +103,8 @@
                                         <span><a href="">10Reviews</a></span>
                                     <li>
                                 </ul>
-                                <p class="pro-box-price">₹{{$productW?->productVariantPrice?->price}}</p>
-                                <a href="{{route("singleProduct", $productW->slug)}}" class="sp-btn">Shop Now</a>
+                                <p class="pro-box-price">₹{{ $productW?->productVariantPrice?->price }}</p>
+                                <a href="{{ route('singleProduct', $productW->slug) }}" class="sp-btn">Shop Now</a>
                             </div>
                         </div>
                     </div>
@@ -380,7 +381,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <a href="" class="sp-btn-snd">view all products</a>
+                    <a href="{{ route('products') }}" class="sp-btn-snd">view all products</a>
                 </div>
             </div>
 
@@ -394,7 +395,7 @@
                 <div class="col-lg-6">
                     <h2>Trusted By<br> 5,000+ Families.</h2>
                     <p>100% Chemical-free Pure<br> Organic Product Today</p>
-                    <a href="{{route('register')}}" class="sp-dark-btn">Registger Now</a>
+                    <a href="{{ route('register') }}" class="sp-dark-btn">Registger Now</a>
                 </div>
             </div>
         </div>
@@ -417,7 +418,37 @@
                 <div class="col-lg-12 mb-4">
                     <div id="demo-pranab">
                         <div id="owl-top-sell-one" class="owl-carousel owl-theme">
-                            <div class="item">
+                            @forelse ($topSelling->take(6) as $topSelling_p)
+                                <div class="item">
+                                    <div class="product-box border-box">
+                                        <div class="product-box-img">
+                                            <img src="{{ asset('storage/' . $topSelling_p?->productPrimaryImage?->image_path) }}"
+                                                class="img-fluid">
+                                        </div>
+                                        <div class="product-box-ctn">
+                                            <h4>{{ $topSelling_p?->name }}</h4>
+                                            <p class="pro-sort-desc">
+                                                {{ Str::limit($topSelling_p->description, 50, '...') }}.</p>
+                                            <ul class="pb-list">
+                                                <li class="pro-box-review">
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star"></span>
+                                                    <span class="fa fa-star"></span>
+                                                    <span><a href="">10Reviews</a></span>
+                                                <li>
+                                            </ul>
+                                            <p class="pro-box-price">₹{{ $topSelling_p?->productVariantPrice?->price }}</p>
+                                            <a href="{{ route('singleProduct', $topSelling_p->slug) }}" class="sp-btn">Shop
+                                                Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                            @endforelse
+
+                            {{-- <div class="item">
                                 <div class="product-box border-box">
                                     <div class="product-box-img">
                                         <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
@@ -512,31 +543,7 @@
                                         <a href="" class="sp-btn">Shop Now</a>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
+                            </div> --}}
 
 
 
@@ -550,7 +557,62 @@
                 <div class="col-lg-12 mb-4">
                     <div id="demo-pranab">
                         <div id="owl-top-sell-two" class="owl-carousel owl-theme">
-                            <div class="item">
+                            @forelse ($topSelling->skip(6) as $topSellingS)
+                                <div class="item">
+                                    <div class="product-box border-box">
+                                        <div class="product-box-img">
+                                            <img src="{{ asset('storage/' . $topSellingS?->productPrimaryImage?->image_path) }}"
+                                                class="img-fluid">
+                                        </div>
+                                        <div class="product-box-ctn">
+                                            <h4>{{ $topSellingS?->name }}</h4>
+                                            <p class="pro-sort-desc">
+                                                {{ Str::limit($topSellingS->description, 50, '...') }}.</p>
+                                            <ul class="pb-list">
+                                                <li class="pro-box-review">
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star"></span>
+                                                    <span class="fa fa-star"></span>
+                                                    <span><a href="">10Reviews</a></span>
+                                                <li>
+                                            </ul>
+                                            <p class="pro-box-price">₹{{ $topSellingS?->productVariantPrice?->price }}
+                                            </p>
+                                            <a href="{{ route('singleProduct', $topSellingS->slug) }}"
+                                                class="sp-btn">Shop
+                                                Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                            @endforelse
+                            {{-- <div class="item">
+                                <div class="product-box border-box">
+                                    <div class="product-box-img">
+                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
+                                    </div>
+                                    <div class="product-box-ctn">
+                                        <h4>Jaggery Powder</h4>
+                                        <p class="pro-sort-desc">Our organic food products are certified organic by
+                                            recognized certification agencies.</p>
+                                        <ul class="pb-list">
+                                            <li class="pro-box-review">
+                                                <span class="fa fa-star rev-checked"></span>
+                                                <span class="fa fa-star rev-checked"></span>
+                                                <span class="fa fa-star rev-checked"></span>
+                                                <span class="fa fa-star"></span>
+                                                <span class="fa fa-star"></span>
+                                                <span><a href="">10Reviews</a></span>
+                                            <li>
+                                        </ul>
+                                        <p class="pro-box-price">₹90.00</p>
+                                        <a href="" class="sp-btn">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            {{-- <div class="item">
                                 <div class="product-box border-box">
                                     <div class="product-box-img">
                                         <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
@@ -645,31 +707,7 @@
                                         <a href="" class="sp-btn">Shop Now</a>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
+                            </div> --}}
 
 
 
@@ -680,7 +718,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <a href="" class="sp-btn-snd">view all products</a>
+                    <a href="{{ route('products') }}" class="sp-btn-snd">view all products</a>
                 </div>
             </div>
 
@@ -696,7 +734,7 @@
                     <h2>About Our Company</h2>
                     <p>We specialize in producing tasty, healthy, wholesome, and nutritious organic food products that
                         are dedicated to better eating for better living.</p>
-                    <a href="{{route('aboutUs')}}" class="banner-btn">know more about us</a>
+                    <a href="{{ route('aboutUs') }}" class="banner-btn">know more about us</a>
                 </div>
             </div>
         </div>
@@ -735,7 +773,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-4">
-                    <a href="{{route('aboutUs')}}" class="sp-btn-snd">Know More</a>
+                    <a href="{{ route('aboutUs') }}" class="sp-btn-snd">Know More</a>
                 </div>
             </div>
         </div>

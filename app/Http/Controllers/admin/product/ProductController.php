@@ -55,6 +55,7 @@ class ProductController extends Controller
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
+
             $variations = [];
             foreach ($request->variant_name as $index => $variantName) {
                 $variations[] = [
@@ -63,6 +64,7 @@ class ProductController extends Controller
                     'measurement_param' => $request->measurement_param[$index],
                     'price' => $request->price[$index],
                     'quantity' => $request->quantity[$index],
+                    'is_show' => $index === 0 ? 1 : 0,
                 ];
             }
 
@@ -127,7 +129,7 @@ class ProductController extends Controller
                 'quantity.*' => 'required|integer',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
-    
+            // dd($request->all());
             // Prepare variations
             $variations = [];
             foreach ($request->variant_name as $index => $variantName) {

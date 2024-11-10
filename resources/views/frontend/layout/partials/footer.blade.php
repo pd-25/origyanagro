@@ -32,17 +32,17 @@
                     <li><a href="#">Salt</a></li>
                     <li><a href="#">Millets</a></li>
                     <li><a href="#">Flours</a></li>
-                    <li><a href="#">Seeds</a></li>
+                    <li><a href="#">Seeds</a></li> 
                 </ul>
             </div>
             <div class="col-lg-2 trd-footer">
                 <h4>Quick Links</h4>
                 <ul class="snd-footer-menu">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                    <li><a href="{{ route('index') }}">Home</a></li>
+                    <li><a href="{{ route('aboutUs') }}">About Us</a></li>
+                    <li><a href="{{route('contactus')}}">Contact</a></li>
+                    <li><a href="{{url('privacy-policy')}}">Privacy Policy</a></li>
+                    <li><a href="{{url('terms-conditions')}}">Terms & Conditions</a></li>
                 </ul>
             </div>
 

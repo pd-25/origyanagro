@@ -29,15 +29,7 @@
                                 </div>
                             @endforelse
 
-                            {{-- <div class="item">
-                            <img src="{{asset('frontend-asset/images/pro-img.jpg')}}" class="img-fluid">
-                        </div>
-                        <div class="item">
-                            <img src="{{asset('frontend-asset/images/pro-img.jpg')}}" class="img-fluid">
-                        </div>
-                        <div class="item">
-                            <img src="{{asset('frontend-asset/images/pro-img.jpg')}}" class="img-fluid">
-                        </div> --}}
+
                         </div>
 
                     </div>
@@ -86,7 +78,7 @@
                         <li>
                             @auth
                                 @if ($singleProduct->carts->count() > 0)
-                                    <a href="{{route('cart')}}" class="banner-btn">Already Added to Bag</a>
+                                    <a href="{{ route('cart') }}" class="banner-btn">Already Added to Bag</a>
                                 @else
                                     <a onclick="addToCart({{ $singleProduct->id }})" class="banner-btn">Add To Bag</a>
                                 @endif
@@ -102,20 +94,26 @@
                 <div class="col-lg-4 col-sm-6 col-7">
                     <ul class="pb-list">
                         <li class="pro-box-review">
-                        <li class="rev-txt">4.00</li>
-                        <span class="fa fa-star rev-checked"></span>
-                        <span class="fa fa-star rev-checked"></span>
-                        <span class="fa fa-star rev-checked"></span>
-                        <span class="fa fa-star"></span>
-                        <span class="fa fa-star"></span>
-                        <li>
+                        <li class="rev-txt">{{ number_format($singleProduct->averageRating() ?? 0, 1) }}</li>
+                        @for ($i = 1; $i <= 5; $i++)
+                            <span
+                                class="fa fa-star {{ $i <= round($singleProduct->averageRating() ?? 0) ? 'rev-checked' : '' }}"></span>
+                        @endfor
+                        </li>
                     </ul>
-                    <p class="revCap">Based on 10 reviews</p>
+                    <p class="revCap">Based on {{ $singleProduct->productReviews->count() }} reviews</p>
                 </div>
 
+
                 <div class="col-lg-3 col-sm-6 col-5 rev-brnBox">
-                    <a href="" class="sp-btn-snd" data-toggle="modal" data-target="#exampleModal-Rev">Write A
-                        Review</a>
+                    @auth
+                        <a href="" class="sp-btn-snd" data-toggle="modal" data-target="#exampleModal-Rev">Write A
+                            Review</a>
+                    @else
+                        <a onclick="promptReviewLogin()" class="sp-btn-snd">Write A
+                            Review</a>
+                    @endauth
+
                 </div>
 
                 <div class="modal fade" id="exampleModal-Rev" tabindex="-1" role="dialog"
@@ -129,54 +127,40 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="review-form" method="post" action="" enctype="multipart/form-data"
-                                    role="form">
+                                <form id="review-form" method="post"
+                                    action="{{ route('writeFeedback', $singleProduct->slug) }}"
+                                    enctype="multipart/form-data" role="form">
+                                    @csrf
                                     <div class="controls">
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="rate">
-                                                    <input type="radio" id="star5" name="rate"
+                                                    <input type="radio" id="star5" name="star"
                                                         value="5" />
                                                     <label for="star5" title="text">5 stars</label>
-                                                    <input type="radio" id="star4" name="rate"
+                                                    <input type="radio" id="star4" name="star"
                                                         value="4" />
                                                     <label for="star4" title="text">4 stars</label>
-                                                    <input type="radio" id="star3" name="rate"
+                                                    <input type="radio" id="star3" name="star"
                                                         value="3" />
                                                     <label for="star3" title="text">3 stars</label>
-                                                    <input type="radio" id="star2" name="rate"
+                                                    <input type="radio" id="star2" name="star"
                                                         value="2" />
                                                     <label for="star2" title="text">2 stars</label>
-                                                    <input type="radio" id="star1" name="rate"
+                                                    <input type="radio" id="star1" name="star"
                                                         value="1" />
                                                     <label for="star1" title="text">1 star</label>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <input id="form_name" type="text" name="full_name"
-                                                        class="form-control" placeholder="Full Name" required="required"
-                                                        data-error="Firstname is required.">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input id="form_email" type="email" name="email"
-                                                        class="form-control" placeholder="Email" required="required"
-                                                        data-error="Valid email is required.">
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <textarea id="form_message" name="message" class="form-control"
+                                                    <textarea id="form_message" name="note" class="form-control"
                                                         placeholder="Tell us your feedback about the product..." rows="4" required="required"
-                                                        data-error="Please,leave us a message."></textarea>
+                                                        data-error="Please,leave us a message." required></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -196,23 +180,29 @@
 
 
             <div id="revBox" class="row justify-content-between rev-box">
-                <div class="col-lg-12 border-bottom">
-                    <ul class="pb-list">
-                        <li class="pro-box-review">
-                            <span class="fa fa-star rev-checked"></span>
-                            <span class="fa fa-star rev-checked"></span>
-                            <span class="fa fa-star rev-checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                        <li>
-                    </ul>
-                    <p>Pellentesque tristique feugiat massa id efficitur. Aliquam pretium dui sit amet ipsum congue congue.
-                        Vivamus auctor dignissim risus quis mattis. Phasellus bibendum est at enim semper, nec aliquet quam
-                        pretium. Sed finibus enim ipsum, porttitor scelerisque tellus imperdiet sed. </p>
-                    <p class="rev-name"><b>John Thomas</b></p>
-                </div>
+                @forelse ($singleProduct->productReviews as $singleReview)
+                    <div class="col-lg-12 border-bottom">
+                        <ul class="pb-list">
+                            <li class="pro-box-review">
+                                {{-- Display star rating dynamically --}}
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span class="fa fa-star {{ $i <= $singleReview->star ? 'rev-checked' : '' }}"></span>
+                                @endfor
+                            </li>
+                        </ul>
+                        {{-- Display review note --}}
+                        <p>{{ $singleReview->note }}</p>
 
-                <div class="col-lg-12 border-bottom mt-3">
+                        {{-- Display user name --}}
+                        <p class="rev-name"><b>{{ $singleReview->user?->name ?? 'Anonymous' }}</b></p>
+                    </div>
+                @empty
+                    <p>No reviews yet..</p>
+                @endforelse
+
+
+
+                {{-- <div class="col-lg-12 border-bottom mt-3">
                     <ul class="pb-list">
                         <li class="pro-box-review">
                             <span class="fa fa-star rev-checked"></span>
@@ -258,160 +248,50 @@
                         Vivamus auctor dignissim risus quis mattis. Phasellus bibendum est at enim semper, nec aliquet quam
                         pretium. Sed finibus enim ipsum, porttitor scelerisque tellus imperdiet sed. </p>
                     <p><b>John Thomas</b></p>
-                </div>
+                </div> --}}
             </div>
 
             <div class="row mt-5">
                 <div class="col-lg-12 mb-3">
                     <h2>Related Products</h2>
                 </div>
+                {{-- @dd($relatedProducts, $singleProduct) --}}
                 <div class="col-lg-12">
                     <div id="demo-pranab">
                         <div id="owl-related-product" class="owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="product-box border-box mb-4">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="single-porduct.html" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box mb-4">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="single-porduct.html" class="sp-btn">Shop Now</a>
+                            @forelse ($relatedProducts as $relatedProductT)
+                                <div class="item">
+                                    <div class="product-box border-box">
+                                        <div class="product-box-img">
+                                            <img src="{{ asset('storage/' . $relatedProductT?->productPrimaryImage?->image_path) }}"
+                                                class="img-fluid">
+                                        </div>
+                                        <div class="product-box-ctn">
+                                            <h4>{{ $relatedProductT?->name }}</h4>
+                                            <p class="pro-sort-desc">
+                                                {{ Str::limit($relatedProductT->description, 50, '...') }}.</p>
+                                            <ul class="pb-list">
+                                                <li class="pro-box-review">
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star rev-checked"></span>
+                                                    <span class="fa fa-star"></span>
+                                                    <span class="fa fa-star"></span>
+                                                    <span><a href="">10Reviews</a></span>
+                                                <li>
+                                            </ul>
+                                            <p class="pro-box-price">₹{{ $relatedProductT?->productVariantPrice?->price }}
+                                            </p>
+                                            <a href="{{ route('singleProduct', $relatedProductT->slug) }}"
+                                                class="sp-btn">Shop
+                                                Now</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box mb-4">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="single-porduct.html" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box mb-4">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="single-porduct.html" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box mb-4">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="single-porduct.html" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product-box border-box mb-4">
-                                    <div class="product-box-img">
-                                        <img src="{{ asset('frontend-asset/images/pro-img.jpg') }}" class="img-fluid">
-                                    </div>
-                                    <div class="product-box-ctn">
-                                        <h4>Jaggery Powder</h4>
-                                        <p class="pro-sort-desc">Our organic food products are certified organic by
-                                            recognized certification agencies.</p>
-                                        <ul class="pb-list">
-                                            <li class="pro-box-review">
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star rev-checked"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span class="fa fa-star"></span>
-                                                <span><a href="">10Reviews</a></span>
-                                            <li>
-                                        </ul>
-                                        <p class="pro-box-price">₹90.00</p>
-                                        <a href="single-porduct.html" class="sp-btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
+                            @empty
+                            @endforelse
+
+
 
                         </div>
 
@@ -577,6 +457,12 @@
 
         function promptLogin() {
             swal("Please log in to add items to your bag.", "", "warning").then(() => {
+                window.location.href = "{{ route('login') }}";
+            });
+        }
+
+        function promptReviewLogin() {
+            swal("Please log in to add review.", "", "warning").then(() => {
                 window.location.href = "{{ route('login') }}";
             });
         }

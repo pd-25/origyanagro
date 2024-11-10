@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    protected $fillable = ["slug","name","description","price","category_id","type","status","quantity_in_stock"];
+    protected $fillable = ["slug", "name", "description", "price", "category_id", "type", "status", "quantity_in_stock"];
 
 
     protected static function boot()
@@ -30,12 +30,19 @@ class Product extends Model
         return $slug;
     }
 
-    public function productImages(){
+    public function productImages()
+    {
         return $this->hasMany(ProductImage::class, "product_id", "id");
     }
 
-    public function productVariants(){
+    public function productVariants()
+    {
         return $this->hasMany(ProductVariant::class, "product_id", "id");
+    }
+
+    public function productReviews()
+    {
+        return $this->hasMany(ProductReview::class, "product_id", "id");
     }
 
 
@@ -49,7 +56,13 @@ class Product extends Model
         return $this->hasOne(ProductVariant::class, "product_id", "id")->where("is_show", 1);
     }
 
-    public function carts(){
+    public function carts()
+    {
         return $this->hasMany(Cart::class, "product_id", "id");
+    }
+
+    public function averageRating()
+    {
+        return $this->productReviews()->avg('star');
     }
 }

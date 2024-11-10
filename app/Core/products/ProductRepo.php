@@ -4,9 +4,11 @@ namespace App\Core\products;
 
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductReview;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
+
 class ProductRepo implements ProductInterface
 {
     public $productModel;
@@ -19,9 +21,12 @@ class ProductRepo implements ProductInterface
         if ($orderBy == "Rand") {
             return $this->productModel->inRandomOrder()->limit(12)->get();
         }
+        if ($orderBy == "limit") {
+            return $this->productModel->inRandomOrder()->limit(12)->get();
+        }
         return $this->productModel->orderBy("id", $orderBy)->get();
     }
-  
+
     public function fetchProductBySlug($slug)
     {
         try {
@@ -29,14 +34,14 @@ class ProductRepo implements ProductInterface
                 ->where('slug', $slug)
                 ->with(['productImages', 'productVariants'])  // Using correct relationship names
                 ->first();
-    
+
             return $product; // Returns null if the product isn’t found, no exception needed
         } catch (\Throwable $th) {
             $this->getLogs($th);
             return null;
         }
     }
-    
+
 
     public function storeProduct($productData, $variations, $productImages)
     {
@@ -74,31 +79,31 @@ class ProductRepo implements ProductInterface
     {
         try {
             return DB::transaction(function () use ($productId, $productData, $variations, $productImages) {
-    
+
                 // Update the main product data
                 $product = $this->productModel->find($productId);
                 if (!$product) {
                     throw new \Exception("Product not found");
                 }
                 $product->update($productData);
-    
+
                 // Update variations
                 DB::table('product_variants')->where('product_id', $productId)->delete();
                 foreach ($variations as &$variation) {
                     $variation['product_id'] = $productId;
                 }
                 DB::table('product_variants')->insert($variations);
-    
+
                 // Update product images
                 if (!empty($productImages['images'])) {
                     // Remove old images
                     ProductImage::where('product_id', $productId)->delete();
-    
+
                     // Add new images
                     foreach ($productImages['images'] as $index => $pImage) {
                         $db_image = time() . rand(0000, 9999) . '.' . $pImage->getClientOriginalExtension();
                         $pImage->storeAs("ProductImages", $db_image, 'public');
-    
+
                         ProductImage::create([
                             "product_id" => $productId,
                             "image_path" => "ProductImages/" . $db_image,
@@ -106,7 +111,7 @@ class ProductRepo implements ProductInterface
                         ]);
                     }
                 }
-    
+
                 return true;
             });
         } catch (\Throwable $th) {
@@ -130,8 +135,8 @@ class ProductRepo implements ProductInterface
             return false;
         }
     }
-    
-    
+
+
     public function getLogs($th)
     {
         Log::debug('ErrorFile-', [$th->getFile()]);
@@ -140,6 +145,21 @@ class ProductRepo implements ProductInterface
 
     public function fetchsingleProduct($slug)
     {
-        return $this->productModel->with("productImages", "productVariantPrice")->where("slug", $slug)->first();
+        return $this->productModel->with("productImages", "productVariantPrice", "productReviews")->where("slug", $slug)->first();
+    }
+
+    public function addReview($data)
+    {
+        try {
+            $data['user_id'] = auth()->id();
+            $storeReview = ProductReview::create($data);
+            if ($storeReview instanceof ProductReview) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 }

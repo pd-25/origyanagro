@@ -79,8 +79,8 @@
                                     @endforeach
                                 </div>
                             </li> --}}
-                            <li><a href="certificate.html">Certificate</a></li>
-                            <li><a href="contact-us.html">Contact Us</a></li>
+                            <li><a href="{{route('certificate')}}">Certificate</a></li>
+                            <li><a href="{{route('contactus')}}">Contact Us</a></li>
                         </ul>
                     </nav>
                     <div class="header-item-right">
